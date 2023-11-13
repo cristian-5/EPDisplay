@@ -33,7 +33,7 @@ void setup() {
 
 	EPD::wake();
 	EPD::clear();
-	EPD::displayPartBaseWhiteImage();
+	EPD::displayPartBaseImage();
 
 	EPD::draw(casper_BITMAP, 8, 8);
 	EPD::draw<2>(casper_BITMAP, 32, 32); // scale 2x
@@ -83,7 +83,7 @@ void setup() {
 
 	EPD::wake();
 	EPD::clear();
-	EPD::displayPartBaseWhiteImage();
+	EPD::displayPartBaseImage();
 
 	EPD::text("Hello World!", 0, 0, Courier_New(20));
 

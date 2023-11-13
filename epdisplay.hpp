@@ -123,16 +123,16 @@ template <
 		}
 		displayPartFrame();
 	}
-	static void displayPartBaseWhiteImage() {
+	static void displayPartBaseImage(uint8_t color = white) {
 		size_t w = width / 8 + (width % 8 != 0); // width (in bytes)
 		sendCommand(0x24);
 		for (size_t j = 0; j < height; j++)
 			for (size_t i = 0; i < w; i++)
-				sendData(0xff);
+				sendData(color);
 		sendCommand(0x26);
 		for (size_t j = 0; j < height; j++)
 			for (size_t i = 0; i < w; i++)
-				sendData(0xff);
+				sendData(color);
 		displayPartFrame();
 	}
 	static void displayPart(const uint8_t * buffer) {
@@ -313,6 +313,21 @@ template <
 			c++;
 		}
 		if (* s != '\0') text_line(s, length, x, y, f);
+	}
+
+	/// draw on the display using the given shader function
+	/// the given function will be called with the x and y coordinates
+	/// of each pixel on the display and should return a boolean,
+	/// true for black, false for white
+	static void shader(bool (* f)(size_t, size_t)) {
+		for (size_t i = 0; i < height; i++) {
+			uint8_t byte = 0;
+			for (size_t j = 0; j < width; j++) {
+				if (j % 8 == 0) byte = 0;
+				bitWrite(byte, 7 - (j % 8), f(j, i));
+				if (j % 8 == 7) sendData(byte);
+			}
+		}
 	}
 
 	private:
